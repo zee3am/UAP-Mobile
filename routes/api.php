@@ -1,14 +1,34 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PelayananController;
 
-Route::get('/pelayanan', [PelayananController::class, 'index']);
-Route::get('/pelayanan/{id}', [PelayananController::class, 'show']);
-Route::post('/pelayanan', [PelayananController::class, 'store']);
-Route::put('/pelayanan/{id}', [PelayananController::class, 'update']);
-Route::delete('/pelayanan/{id}', [PelayananController::class, 'destroy']);
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+/*
+|--------------------------------------------------------------------------
+| AUTH
+|--------------------------------------------------------------------------
+*/
+Route::prefix('auth')->group(function () {
+    Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/login', [AuthController::class, 'login']);
+    Route::get('/me', [AuthController::class, 'me'])->middleware('auth:api');
+    Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:api');
+});
+
+/*
+|--------------------------------------------------------------------------
+| PELAYANAN (CUCI SEPATU)
+|--------------------------------------------------------------------------
+*/
+
+// PUBLIC
+Route::get('/pelayanans', [PelayananController::class, 'index']);
+Route::get('/pelayanans/{id}', [PelayananController::class, 'show']);
+
+// PROTECTED
+Route::middleware('auth:api')->group(function () {
+    Route::post('/pelayanans', [PelayananController::class, 'store']);
+    Route::put('/pelayanans/{id}', [PelayananController::class, 'update']);
+    Route::delete('/pelayanans/{id}', [PelayananController::class, 'destroy']);
+});

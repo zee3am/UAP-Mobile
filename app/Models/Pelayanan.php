@@ -6,12 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Pelayanan extends Model
 {
+    protected $table = 'pelayanans';
+
     protected $fillable = [
-        'nama_pelanggan',
-        'jenis_sepatu',
-        'layanan',
+        'nama',
+        'jenis',
         'harga',
-        'status'
+        'foto_sepatu',
     ];
 }
-
